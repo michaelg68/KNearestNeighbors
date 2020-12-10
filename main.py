@@ -6,7 +6,7 @@ import numpy as np
 from sklearn import linear_model, preprocessing
 
 data = pd.read_csv("KNN/car.data")
-print(data.head()) #To check if data is loaded correctly
+#print(data.head()) #To check if data is loaded correctly
 
 le = preprocessing.LabelEncoder()
 
@@ -22,3 +22,20 @@ X = list(zip(buying,maint,door,persons,lug_boot,safety)) #features
 y = list(cls) #labels
 
 x_train, x_test, y_train, y_test = sklearn.model_selection.train_test_split(X, y, test_size=0.1)
+
+model = KNeighborsClassifier(n_neighbors=9)
+model.fit(x_train, y_train)
+acc = model.score(x_test, y_test)
+print(acc)
+
+predicted = model.predict(x_test)
+names = ["unacc", "acc", "good", "vgood"]
+
+for i in range(len(predicted)):
+    # This will display the predicted class, our data and the actual class
+    # We create a names list so that we can convert our integer predictions into
+    # their string representation
+    print("Predicted:", names[predicted[i]], "Data:", x_test[i], "Actual:", names[y_test[i]])
+    # Now we will see the neighbors of each point in our testing data
+    n =  model.kneighbors([x_test[i]], 9, True)
+    print("N:", n)
